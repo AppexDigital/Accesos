@@ -1,0 +1,1702 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Versión: 1.8 -->
+    <title>Portal de Accesos Dinámico - TerranovaOrigen</title>
+    <link id="favicon" rel="icon" type="image/png" href="imagenes/Icono1.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* --- Importación de Fuentes y Variables de Estilo --- */
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@400;500&display=swap');
+        :root {
+            --color-hueso: #ECE2D2;
+            --color-teal: #264746;
+            --color-ecosistemas: #F39C12;
+            --color-solicitudes: #C0392B;
+            --color-sistemas: #2980B9;
+            --color-reservas: #27AE60;
+            --color-producto: #8E44AD;
+            --color-procesos: #34495E;
+            --color-white: #FFFFFF;
+            --color-danger: #e03131;
+            --color-success: #27AE60;
+            --color-gray-light: #f8f9fa;
+            --color-gray-medium: #dee2e6;
+            --color-gray-dark: #6c757d;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--color-hueso);
+            color: var(--color-teal);
+            margin: 0;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        h1, h2 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+        }
+
+        /* --- Estructura Principal y Encabezado --- */
+        .header-container {
+            width: 100%;
+            height: 300px;
+            background-image: url('Imagenes/Encabezado.jpg');
+            background-color: var(--color-teal);
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-hueso);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            position: relative;
+            padding: 0 1rem;
+            box-sizing: border-box;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            max-width: 1200px;
+            position: relative;
+        }
+
+        .header-container h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            margin: 0;
+            text-align: center;
+        }
+
+        main {
+            padding-bottom: 80px;
+        }
+
+        .section {
+            padding: 2.5rem 1rem;
+            text-align: center;
+        }
+
+        .section h2 {
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            margin-bottom: 2rem;
+            display: inline-block;
+            position: relative;
+        }
+
+        .button-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* --- Estilos de Botones --- */
+        .button {
+            font-family: 'Roboto', sans-serif;
+            font-weight: 500;
+            background: var(--color-hueso);
+            border: 2px solid;
+            padding: 12px 25px;
+            font-size: 1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+        
+        .button .button-text {
+            transition: transform 0.3s ease;
+        }
+        .button .copy-icon {
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: all 0.3s ease;
+        }
+        .button:hover .copy-icon {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        .button.ecosistemas { border-color: var(--color-ecosistemas); color: var(--color-ecosistemas); }
+        .button.ecosistemas:hover { background-color: var(--color-ecosistemas); }
+        .button.solicitudes { border-color: var(--color-solicitudes); color: var(--color-solicitudes); }
+        .button.solicitudes:hover { background-color: var(--color-solicitudes); }
+        .button.sistemas { border-color: var(--color-sistemas); color: var(--color-sistemas); }
+        .button.sistemas:hover { background-color: var(--color-sistemas); }
+        .button.reservas { border-color: var(--color-reservas); color: var(--color-reservas); }
+        .button.reservas:hover { background-color: var(--color-reservas); }
+        .button.producto { border-color: var(--color-producto); color: var(--color-producto); }
+        .button.producto:hover { background-color: var(--color-producto); }
+        .button.procesos { border-color: var(--color-procesos); color: var(--color-procesos); }
+        .button.procesos:hover { background-color: var(--color-procesos); }
+
+        /* --- Controles de Edición (Modo Admin) --- */
+        .admin-controls { display: none; }
+        .admin-mode .admin-controls { display: flex; }
+        .section-admin-controls, .button-admin-controls { display: none; }
+        .admin-mode .section-admin-controls, .admin-mode .button-admin-controls { display: inline-flex; gap: 8px; }
+
+        .section-admin-controls {
+            position: absolute;
+            top: 50%;
+            right: -10px;
+            transform: translate(100%, -50%);
+        }
+        .button-admin-controls {
+            margin-left: 10px;
+        }
+        .admin-btn {
+            background: rgba(0,0,0,0.05);
+            border: 1px solid var(--color-gray-medium);
+            color: var(--color-gray-dark);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+        .admin-btn:hover {
+            background: var(--color-teal);
+            color: var(--color-white);
+            border-color: var(--color-teal);
+        }
+        .add-button-placeholder {
+            display: none;
+            border: 2px dashed var(--color-gray-medium);
+            color: var(--color-gray-dark);
+            padding: 12px 30px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .admin-mode .add-button-placeholder { display: inline-flex; align-items: center; gap: 8px; }
+        .add-button-placeholder:hover {
+            background: var(--color-gray-light);
+            border-color: var(--color-gray-dark);
+        }
+
+        /* --- Pie de Página y Barra de Administración --- */
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: var(--color-gray-dark);
+            font-size: 0.9rem;
+        }
+        #admin-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        #unlock-btn {
+            color: inherit;
+            text-decoration: none;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        #unlock-btn:hover { color: var(--color-teal); }
+        .version-tag {
+            background-color: var(--color-gray-light);
+            color: var(--color-gray-dark);
+            font-size: 0.8rem;
+            font-weight: 500;
+            padding: 5px 10px;
+            border-radius: 20px;
+            border: 1px solid var(--color-gray-medium);
+        }
+        
+        #lock-container { display: block; }
+        .admin-mode #lock-container { display: none; }
+        #admin-controls-container { display: none; }
+        .admin-mode #admin-controls-container { display: flex; }
+
+        /* --- Interruptor de Idioma --- */
+        #language-switcher-container {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+        .admin-mode #language-switcher-container {
+            display: none;
+        }
+        #lang-switcher-btn {
+            background-color: transparent;
+            border: 1px solid rgba(236, 226, 210, 0.5);
+            color: var(--color-hueso);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-family: 'Roboto', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        #lang-switcher-btn:hover {
+            background-color: rgba(236, 226, 210, 0.2);
+            border-color: var(--color-hueso);
+        }
+
+
+        /* --- Modales --- */
+        .modal-container {
+            position: fixed; inset: 0; background-color: rgba(0, 0, 0, 0.6);
+            z-index: 1001; display: flex; align-items: center; justify-content: center;
+            padding: 1rem; opacity: 0; transition: opacity 0.3s ease; pointer-events: none;
+        }
+        .modal-container.visible { opacity: 1; pointer-events: auto; }
+        .modal-content {
+            background-color: var(--color-white); border-radius: 0.75rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); width: 100%;
+            max-width: 450px; transform: scale(0.95); transition: transform 0.3s ease;
+            position: relative; padding: 2rem;
+        }
+        .modal-container.visible .modal-content { transform: scale(1); }
+        .modal-close-btn {
+            position: absolute; top: 1rem; right: 1rem; background: none; border: none;
+            font-size: 1.5rem; color: var(--color-gray-dark); cursor: pointer;
+        }
+        .modal-content h3 { font-size: 1.5rem; margin-bottom: 1rem; color: var(--color-teal); }
+        .form-group { margin-bottom: 1rem; text-align: left; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
+        .form-group input, .form-group select {
+            width: 100%; padding: 0.75rem; border: 1px solid var(--color-gray-medium);
+            border-radius: 8px; box-sizing: border-box;
+        }
+        .form-group input[type="color"] {
+            padding: 0.25rem;
+            height: 48px;
+        }
+        .form-group input:focus, .form-group select:focus { outline: 2px solid var(--color-teal); border-color: var(--color-teal); }
+        .btn-modal {
+            width: 100%; padding: 0.8rem; border: none; border-radius: 8px;
+            font-size: 1rem; font-weight: 500; cursor: pointer; transition: background 0.2s;
+            display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+        }
+        .btn-primary { background-color: var(--color-teal); color: var(--color-white); }
+        .btn-primary:hover { background-color: #1c3332; }
+        .btn-danger { background-color: var(--color-danger); color: var(--color-white); }
+        .btn-success { background-color: var(--color-success); color: var(--color-white); }
+        .btn-secondary { background-color: var(--color-gray-medium); color: var(--color-teal); }
+        #code-output { font-family: monospace; width: 100%; height: 40vh; }
+        .password-modal.shake { animation: shake 0.5s; }
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); } 20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); } 40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+
+        /* --- Notificación --- */
+        #notification {
+            position: fixed; bottom: 20px; left: 50%;
+            transform: translate(-50%, 100px); background-color: var(--color-teal);
+            color: var(--color-hueso); padding: 12px 25px; border-radius: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2); z-index: 1000;
+            transition: transform 0.4s ease-in-out; font-weight: 500;
+        }
+        #notification.show { transform: translate(-50%, 0); }
+    </style>
+    <style id="dynamic-hover-styles">
+                            .button[data-button-id="101"]:hover {
+                                color: #ece2d2;
+                            }
+                            .button[data-button-id="101"]:hover .copy-icon svg {
+                                stroke: #ece2d2;
+                            }
+                        
+                            .button[data-button-id="102"]:hover {
+                                color: #ece2d2;
+                            }
+                            .button[data-button-id="102"]:hover .copy-icon svg {
+                                stroke: #ece2d2;
+                            }
+                        
+                            .button[data-button-id="201"]:hover {
+                                color: #ece2d2;
+                            }
+                            .button[data-button-id="201"]:hover .copy-icon svg {
+                                stroke: #ece2d2;
+                            }
+                        
+                            .button[data-button-id="202"]:hover {
+                                color: #ece2d2;
+                            }
+                            .button[data-button-id="202"]:hover .copy-icon svg {
+                                stroke: #ece2d2;
+                            }
+                        
+                            .button[data-button-id="203"]:hover {
+                                color: #ece2d2;
+                            }
+                            .button[data-button-id="203"]:hover .copy-icon svg {
+                                stroke: #ece2d2;
+                            }
+                        
+                            .button[data-button-id="204"]:hover {
+                                color: #ece2d2;
+                            }
+                            .button[data-button-id="204"]:hover .copy-icon svg {
+                                stroke: #ece2d2;
+                            }
+                        
+                            .button[data-button-id="205"]:hover {
+                                color: #ece2d2;
+                            }
+                            .button[data-button-id="205"]:hover .copy-icon svg {
+                                stroke: #ece2d2;
+                            }
+                        
+                            .button[data-button-id="206"]:hover {
+                                color: #ECE2D2;
+                            }
+                            .button[data-button-id="206"]:hover .copy-icon svg {
+                                stroke: #ECE2D2;
+                            }
+                        
+                            .button[data-button-id="207"]:hover {
+                                color: #ECE2D2;
+                            }
+                            .button[data-button-id="207"]:hover .copy-icon svg {
+                                stroke: #ECE2D2;
+                            }
+                        
+                            .button[data-button-id="301"]:hover {
+                                color: #ECE2D2;
+                            }
+                            .button[data-button-id="301"]:hover .copy-icon svg {
+                                stroke: #ECE2D2;
+                            }
+                        
+                            .button[data-button-id="302"]:hover {
+                                color: #ECE2D2;
+                            }
+                            .button[data-button-id="302"]:hover .copy-icon svg {
+                                stroke: #ECE2D2;
+                            }
+                        
+                            .button[data-button-id="303"]:hover {
+                                color: #ECE2D2;
+                            }
+                            .button[data-button-id="303"]:hover .copy-icon svg {
+                                stroke: #ECE2D2;
+                            }
+                        
+                            .button[data-button-id="304"]:hover {
+                                color: #ece2d2;
+                            }
+                            .button[data-button-id="304"]:hover .copy-icon svg {
+                                stroke: #ece2d2;
+                            }
+                        
+                            .button[data-button-id="305"]:hover {
+                                color: #ece2d2;
+                            }
+                            .button[data-button-id="305"]:hover .copy-icon svg {
+                                stroke: #ece2d2;
+                            }
+                        
+                            .button[data-button-id="306"]:hover {
+                                color: #ECE2D2;
+                            }
+                            .button[data-button-id="306"]:hover .copy-icon svg {
+                                stroke: #ECE2D2;
+                            }
+                        
+                            .button[data-button-id="307"]:hover {
+                                color: #ece2d2;
+                            }
+                            .button[data-button-id="307"]:hover .copy-icon svg {
+                                stroke: #ece2d2;
+                            }
+                        
+                            .button[data-button-id="1760051837146"]:hover {
+                                color: #ece2d2;
+                            }
+                            .button[data-button-id="1760051837146"]:hover .copy-icon svg {
+                                stroke: #ece2d2;
+                            }
+                        
+                            .button[data-button-id="401"]:hover {
+                                color: #ECE2D2;
+                            }
+                            .button[data-button-id="401"]:hover .copy-icon svg {
+                                stroke: #ECE2D2;
+                            }
+                        
+                            .button[data-button-id="402"]:hover {
+                                color: #ECE2D2;
+                            }
+                            .button[data-button-id="402"]:hover .copy-icon svg {
+                                stroke: #ECE2D2;
+                            }
+                        
+                            .button[data-button-id="1757610376723"]:hover {
+                                color: #ece2d2;
+                            }
+                            .button[data-button-id="1757610376723"]:hover .copy-icon svg {
+                                stroke: #ece2d2;
+                            }
+                        
+                            .button[data-button-id="501"]:hover {
+                                color: #ECE2D2;
+                            }
+                            .button[data-button-id="501"]:hover .copy-icon svg {
+                                stroke: #ECE2D2;
+                            }
+                        
+                            .button[data-button-id="502"]:hover {
+                                color: #ece2d2;
+                            }
+                            .button[data-button-id="502"]:hover .copy-icon svg {
+                                stroke: #ece2d2;
+                            }
+                        
+                            .button[data-button-id="503"]:hover {
+                                color: #ece2d2;
+                            }
+                            .button[data-button-id="503"]:hover .copy-icon svg {
+                                stroke: #ece2d2;
+                            }
+                        
+                            .button[data-button-id="504"]:hover {
+                                color: #ece2d2;
+                            }
+                            .button[data-button-id="504"]:hover .copy-icon svg {
+                                stroke: #ece2d2;
+                            }
+                        
+                            .button[data-button-id="506"]:hover {
+                                color: #ece2d2;
+                            }
+                            .button[data-button-id="506"]:hover .copy-icon svg {
+                                stroke: #ece2d2;
+                            }
+                        
+                            .button[data-button-id="601"]:hover {
+                                color: #ece2d2;
+                            }
+                            .button[data-button-id="601"]:hover .copy-icon svg {
+                                stroke: #ece2d2;
+                            }
+                        
+                            .button[data-button-id="602"]:hover {
+                                color: #ece2d2;
+                            }
+                            .button[data-button-id="602"]:hover .copy-icon svg {
+                                stroke: #ece2d2;
+                            }
+                        
+                            .button[data-button-id="603"]:hover {
+                                color: #ECE2D2;
+                            }
+                            .button[data-button-id="603"]:hover .copy-icon svg {
+                                stroke: #ECE2D2;
+                            }
+                        
+                            .button[data-button-id="604"]:hover {
+                                color: #ECE2D2;
+                            }
+                            .button[data-button-id="604"]:hover .copy-icon svg {
+                                stroke: #ECE2D2;
+                            }
+                        
+                            .button[data-button-id="605"]:hover {
+                                color: #ECE2D2;
+                            }
+                            .button[data-button-id="605"]:hover .copy-icon svg {
+                                stroke: #ECE2D2;
+                            }
+                        </style>
+</head>
+<body id="app-body" class="">
+
+    <header class="header-container">
+        <div class="header-content">
+            <h1 data-lang-key="main_title">Accesos TerranovaOrigen</h1>
+            <div id="language-switcher-container">
+                <button id="lang-switcher-btn">EN</button>
+            </div>
+        </div>
+    </header>
+
+    <main id="sections-container"><section class="section" data-section-id="1"><div style="position: relative; display: inline-block;"><h2>Ecosistemas</h2>
+                    <div class="section-admin-controls">
+                        <button class="admin-btn edit-section-btn" title="Editar Sección"><i class="fas fa-pen"></i></button>
+                        <button class="admin-btn delete-section-btn" title="Eliminar Sección"><i class="fas fa-trash"></i></button>
+                    </div></div><div class="button-container"><a href="https://productoysistemas.github.io/Ecosistema/" class="button ecosistemas" data-button-id="101" target="_blank" rel="noopener noreferrer"><span class="button-text">Mapa de Ecosistemas</span> <span class="copy-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span> <div class="button-admin-controls"><button class="admin-btn edit-button-btn" title="Editar Botón"><i class="fas fa-pen"></i></button><button class="admin-btn delete-button-btn" title="Eliminar Botón"><i class="fas fa-trash"></i></button></div></a><a href="https://terranovacocr.sharepoint.com/:w:/s/TerranovaOrigen/EdbpRhM11jtKoH1oA-sF4ZQBHAXMscUQ_97mgYM_YQsNDg?e=dq9tZo" class="button ecosistemas" data-button-id="102" target="_blank" rel="noopener noreferrer"><span class="button-text">Descripciones</span> <span class="copy-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span> <div class="button-admin-controls"><button class="admin-btn edit-button-btn" title="Editar Botón"><i class="fas fa-pen"></i></button><button class="admin-btn delete-button-btn" title="Eliminar Botón"><i class="fas fa-trash"></i></button></div></a><div class="add-button-placeholder"><i class="fas fa-plus"></i> <span data-lang-key="add_button_placeholder">Añadir Botón</span></div></div></section><section class="section" data-section-id="2"><div style="position: relative; display: inline-block;"><h2>Solicitudes de Apertura</h2>
+                    <div class="section-admin-controls">
+                        <button class="admin-btn edit-section-btn" title="Editar Sección"><i class="fas fa-pen"></i></button>
+                        <button class="admin-btn delete-section-btn" title="Eliminar Sección"><i class="fas fa-trash"></i></button>
+                    </div></div><div class="button-container"><a href="https://forms.office.com/r/bJK36bqBCz" class="button solicitudes" data-button-id="201" target="_blank" rel="noopener noreferrer"><span class="button-text">Agencia de Viajes (EN)</span> <span class="copy-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span> <div class="button-admin-controls"><button class="admin-btn edit-button-btn" title="Editar Botón"><i class="fas fa-pen"></i></button><button class="admin-btn delete-button-btn" title="Eliminar Botón"><i class="fas fa-trash"></i></button></div></a><a href="https://forms.office.com/r/Qc8J5ZzfCL" class="button solicitudes" data-button-id="202" target="_blank" rel="noopener noreferrer"><span class="button-text">Agencia de Viajes (ES)</span> <span class="copy-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span> <div class="button-admin-controls"><button class="admin-btn edit-button-btn" title="Editar Botón"><i class="fas fa-pen"></i></button><button class="admin-btn delete-button-btn" title="Eliminar Botón"><i class="fas fa-trash"></i></button></div></a><a href="https://forms.office.com/r/2Kzty3RzLi" class="button solicitudes" data-button-id="203" target="_blank" rel="noopener noreferrer"><span class="button-text">Cliente Directo (EN)</span> <span class="copy-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span> <div class="button-admin-controls"><button class="admin-btn edit-button-btn" title="Editar Botón"><i class="fas fa-pen"></i></button><button class="admin-btn delete-button-btn" title="Eliminar Botón"><i class="fas fa-trash"></i></button></div></a><a href="https://forms.office.com/r/Lvd8Jiybvx" class="button solicitudes" data-button-id="204" target="_blank" rel="noopener noreferrer"><span class="button-text">Cliente Directo (ES)</span> <span class="copy-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span> <div class="button-admin-controls"><button class="admin-btn edit-button-btn" title="Editar Botón"><i class="fas fa-pen"></i></button><button class="admin-btn delete-button-btn" title="Eliminar Botón"><i class="fas fa-trash"></i></button></div></a><a href="https://forms.office.com/r/WifsgwMy8E" class="button solicitudes" data-button-id="205" target="_blank" rel="noopener noreferrer"><span class="button-text">Cliente Corporativo (ES)</span> <span class="copy-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span> <div class="button-admin-controls"><button class="admin-btn edit-button-btn" title="Editar Botón"><i class="fas fa-pen"></i></button><button class="admin-btn delete-button-btn" title="Eliminar Botón"><i class="fas fa-trash"></i></button></div></a><a href="https://forms.office.com/r/rngtyhaSvg" class="button solicitudes" data-button-id="206" target="_blank" rel="noopener noreferrer"><span class="button-text">Proveedores</span> <span class="copy-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span> <div class="button-admin-controls"><button class="admin-btn edit-button-btn" title="Editar Botón"><i class="fas fa-pen"></i></button><button class="admin-btn delete-button-btn" title="Eliminar Botón"><i class="fas fa-trash"></i></button></div></a><a href="https://forms.office.com/pages/responsepage.aspx?id=jN90G6rIeUWdbBRw0MTogTKrGmVsDR1FvMOrqJ5zYbhUQjZUTDgxMDU4MDMyWkpKNU9ZTjhITUgzTC4u" class="button solicitudes" data-button-id="207" target="_blank" rel="noopener noreferrer"><span class="button-text">Servicios</span> <span class="copy-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span> <div class="button-admin-controls"><button class="admin-btn edit-button-btn" title="Editar Botón"><i class="fas fa-pen"></i></button><button class="admin-btn delete-button-btn" title="Eliminar Botón"><i class="fas fa-trash"></i></button></div></a><div class="add-button-placeholder"><i class="fas fa-plus"></i> <span data-lang-key="add_button_placeholder">Añadir Botón</span></div></div></section><section class="section" data-section-id="3"><div style="position: relative; display: inline-block;"><h2>Sistemas</h2>
+                    <div class="section-admin-controls">
+                        <button class="admin-btn edit-section-btn" title="Editar Sección"><i class="fas fa-pen"></i></button>
+                        <button class="admin-btn delete-section-btn" title="Eliminar Sección"><i class="fas fa-trash"></i></button>
+                    </div></div><div class="button-container"><a href="https://k8s-cloud1.toursys.net/Toursys/login.xhtml?companyName=Terranova" class="button sistemas" data-button-id="301" target="_blank" rel="noopener noreferrer"><span class="button-text">Toursys</span> <span class="copy-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span> <div class="button-admin-controls"><button class="admin-btn edit-button-btn" title="Editar Botón"><i class="fas fa-pen"></i></button><button class="admin-btn delete-button-btn" title="Eliminar Botón"><i class="fas fa-trash"></i></button></div></a><a href="https://monday.com/lang/es" class="button sistemas" data-button-id="302" target="_blank" rel="noopener noreferrer"><span class="button-text">Monday</span> <span class="copy-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span> <div class="button-admin-controls"><button class="admin-btn edit-button-btn" title="Editar Botón"><i class="fas fa-pen"></i></button><button class="admin-btn delete-button-btn" title="Eliminar Botón"><i class="fas fa-trash"></i></button></div></a><a href="https://www.safariportal.app/" class="button sistemas" data-button-id="303" target="_blank" rel="noopener noreferrer"><span class="button-text">Safari Portal</span> <span class="copy-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span> <div class="button-admin-controls"><button class="admin-btn edit-button-btn" title="Editar Botón"><i class="fas fa-pen"></i></button><button class="admin-btn delete-button-btn" title="Eliminar Botón"><i class="fas fa-trash"></i></button></div></a><a href="https://herramintacomisionesenvios.netlify.app/" class="button sistemas" data-button-id="304" target="_blank" rel="noopener noreferrer"><span class="button-text">Herramienta de Comisiones y envíos</span> <span class="copy-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span> <div class="button-admin-controls"><button class="admin-btn edit-button-btn" title="Editar Botón"><i class="fas fa-pen"></i></button><button class="admin-btn delete-button-btn" title="Eliminar Botón"><i class="fas fa-trash"></i></button></div></a><a href="https://controlproveedoresservicios.netlify.app/" class="button sistemas" data-button-id="305" target="_blank" rel="noopener noreferrer"><span class="button-text">Control de proveedores y Servicios</span> <span class="copy-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span> <div class="button-admin-controls"><button class="admin-btn edit-button-btn" title="Editar Botón"><i class="fas fa-pen"></i></button><button class="admin-btn delete-button-btn" title="Eliminar Botón"><i class="fas fa-trash"></i></button></div></a><a href="https://apps.powerapps.com/play/e/default-1b74df8c-c8aa-4579-9d6c-1470d0c4e881/a/e0c7f5f7-3abc-4199-823a-240ec6540f03?tenantId=1b74df8c-c8aa-4579-9d6c-1470d0c4e881" class="button sistemas" data-button-id="306" target="_blank" rel="noopener noreferrer"><span class="button-text">Formulario Solicitud de Pagos</span> <span class="copy-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span> <div class="button-admin-controls"><button class="admin-btn edit-button-btn" title="Editar Botón"><i class="fas fa-pen"></i></button><button class="admin-btn delete-button-btn" title="Eliminar Botón"><i class="fas fa-trash"></i></button></div></a><a href="https://miposafiliados.credomatic.com/" class="button sistemas" data-button-id="307" target="_blank" rel="noopener noreferrer"><span class="button-text">Links de Pagos</span> <span class="copy-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span> <div class="button-admin-controls"><button class="admin-btn edit-button-btn" title="Editar Botón"><i class="fas fa-pen"></i></button><button class="admin-btn delete-button-btn" title="Eliminar Botón"><i class="fas fa-trash"></i></button></div></a><a href="https://herramientacotizacion.netlify.app/" class="button sistemas" data-button-id="1760051837146" target="_blank" rel="noopener noreferrer"><span class="button-text">Herramienta de Cotización Golfito</span> <span class="copy-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span> <div class="button-admin-controls"><button class="admin-btn edit-button-btn" title="Editar Botón"><i class="fas fa-pen"></i></button><button class="admin-btn delete-button-btn" title="Eliminar Botón"><i class="fas fa-trash"></i></button></div></a><div class="add-button-placeholder"><i class="fas fa-plus"></i> <span data-lang-key="add_button_placeholder">Añadir Botón</span></div></div></section><section class="section" data-section-id="4"><div style="position: relative; display: inline-block;"><h2>Reservas</h2>
+                    <div class="section-admin-controls">
+                        <button class="admin-btn edit-section-btn" title="Editar Sección"><i class="fas fa-pen"></i></button>
+                        <button class="admin-btn delete-section-btn" title="Eliminar Sección"><i class="fas fa-trash"></i></button>
+                    </div></div><div class="button-container"><a href="https://www.go7.io/" class="button reservas" data-button-id="401" target="_blank" rel="noopener noreferrer"><span class="button-text">Sansa</span> <span class="copy-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span> <div class="button-admin-controls"><button class="admin-btn edit-button-btn" title="Editar Botón"><i class="fas fa-pen"></i></button><button class="admin-btn delete-button-btn" title="Eliminar Botón"><i class="fas fa-trash"></i></button></div></a><a href="https://natcar.com/?gclid=EAIaIQobChMI3sW7y--x_wIVU-aGCh10AQZ3EAAYASAAEgJ17fD_BwE" class="button reservas" data-button-id="402" target="_blank" rel="noopener noreferrer"><span class="button-text">National</span> <span class="copy-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span> <div class="button-admin-controls"><button class="admin-btn edit-button-btn" title="Editar Botón"><i class="fas fa-pen"></i></button><button class="admin-btn delete-button-btn" title="Eliminar Botón"><i class="fas fa-trash"></i></button></div></a><a href="https://admin.orbebooking.com/" class="button reservas" data-button-id="1757610376723" target="_blank" rel="noopener noreferrer"><span class="button-text">Orbe</span> <span class="copy-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span> <div class="button-admin-controls"><button class="admin-btn edit-button-btn" title="Editar Botón"><i class="fas fa-pen"></i></button><button class="admin-btn delete-button-btn" title="Eliminar Botón"><i class="fas fa-trash"></i></button></div></a><div class="add-button-placeholder"><i class="fas fa-plus"></i> <span data-lang-key="add_button_placeholder">Añadir Botón</span></div></div></section><section class="section" data-section-id="5"><div style="position: relative; display: inline-block;"><h2>Producto</h2>
+                    <div class="section-admin-controls">
+                        <button class="admin-btn edit-section-btn" title="Editar Sección"><i class="fas fa-pen"></i></button>
+                        <button class="admin-btn delete-section-btn" title="Eliminar Sección"><i class="fas fa-trash"></i></button>
+                    </div></div><div class="button-container"><a href="https://terranovacocr.sharepoint.com/sites/TerranovaOrigen/Documentos%20compartidos/Forms/AllItems.aspx" class="button producto" data-button-id="501" target="_blank" rel="noopener noreferrer"><span class="button-text">SharedPoint</span> <span class="copy-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span> <div class="button-admin-controls"><button class="admin-btn edit-button-btn" title="Editar Botón"><i class="fas fa-pen"></i></button><button class="admin-btn delete-button-btn" title="Eliminar Botón"><i class="fas fa-trash"></i></button></div></a><a href="https://terranovacocr.sharepoint.com/:x:/s/TerranovaOrigen/EQc_G9DUv-BOuy7yRrgUfo4Bn9s3_m-AWt5hWrYvRwAreg?e=HtQkdB" class="button producto" data-button-id="502"><span class="button-text">Créditos</span> <span class="copy-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span> <div class="button-admin-controls"><button class="admin-btn edit-button-btn" title="Editar Botón"><i class="fas fa-pen"></i></button><button class="admin-btn delete-button-btn" title="Eliminar Botón"><i class="fas fa-trash"></i></button></div></a><a href="https://terranovacocr.sharepoint.com/:f:/s/TerranovaOrigen/ErH6hj1D83NJuBM4zBrXObsBZRrvP_hChQrfNna0sz9uLQ?e=KpkzqA" class="button producto" data-button-id="503" target="_blank" rel="noopener noreferrer"><span class="button-text">Green Season Specials</span> <span class="copy-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span> <div class="button-admin-controls"><button class="admin-btn edit-button-btn" title="Editar Botón"><i class="fas fa-pen"></i></button><button class="admin-btn delete-button-btn" title="Eliminar Botón"><i class="fas fa-trash"></i></button></div></a><a href="https://terranovacocr.sharepoint.com/:f:/s/TerranovaOrigen/EvhifJDTl-FDvV7ZmbPN80EBIzOMNMrjomds7j9YdQq8lw?e=QGw7ve" class="button producto" data-button-id="504"><span class="button-text">Amenidades Virtuoso</span> <span class="copy-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span> <div class="button-admin-controls"><button class="admin-btn edit-button-btn" title="Editar Botón"><i class="fas fa-pen"></i></button><button class="admin-btn delete-button-btn" title="Eliminar Botón"><i class="fas fa-trash"></i></button></div></a><a href="https://terranovacocr.sharepoint.com/:w:/s/TerranovaOrigen/EZbRLyZ_qZFNnos3rTCE1eAB1LNwVxkQv-IvSfjPmn6kFQ?e=ehaaiv" class="button producto" data-button-id="506"><span class="button-text">Fórmulas de Cálculo</span> <span class="copy-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span> <div class="button-admin-controls"><button class="admin-btn edit-button-btn" title="Editar Botón"><i class="fas fa-pen"></i></button><button class="admin-btn delete-button-btn" title="Eliminar Botón"><i class="fas fa-trash"></i></button></div></a><div class="add-button-placeholder"><i class="fas fa-plus"></i> <span data-lang-key="add_button_placeholder">Añadir Botón</span></div></div></section><section class="section" data-section-id="6"><div style="position: relative; display: inline-block;"><h2>Procesos</h2>
+                    <div class="section-admin-controls">
+                        <button class="admin-btn edit-section-btn" title="Editar Sección"><i class="fas fa-pen"></i></button>
+                        <button class="admin-btn delete-section-btn" title="Eliminar Sección"><i class="fas fa-trash"></i></button>
+                    </div></div><div class="button-container"><a href="https://productoysistemas.github.io/ClientJourney/" class="button procesos" data-button-id="601" target="_blank" rel="noopener noreferrer"><span class="button-text">Client Journey</span> <span class="copy-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span> <div class="button-admin-controls"><button class="admin-btn edit-button-btn" title="Editar Botón"><i class="fas fa-pen"></i></button><button class="admin-btn delete-button-btn" title="Eliminar Botón"><i class="fas fa-trash"></i></button></div></a><a href="https://terranovacocr.sharepoint.com/:b:/s/TerranovaOrigen/EdQktKfH1o1LqCLIF2xe4PUBIbcsZX3PdS2Bs1QaRQys0w?e=IcfBoh" class="button procesos" data-button-id="602" target="_blank" rel="noopener noreferrer"><span class="button-text">Manual Safari</span> <span class="copy-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span> <div class="button-admin-controls"><button class="admin-btn edit-button-btn" title="Editar Botón"><i class="fas fa-pen"></i></button><button class="admin-btn delete-button-btn" title="Eliminar Botón"><i class="fas fa-trash"></i></button></div></a><a href="#" class="button procesos" data-button-id="603" target="_blank" rel="noopener noreferrer"><span class="button-text">Manual Toursys</span> <span class="copy-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span> <div class="button-admin-controls"><button class="admin-btn edit-button-btn" title="Editar Botón"><i class="fas fa-pen"></i></button><button class="admin-btn delete-button-btn" title="Eliminar Botón"><i class="fas fa-trash"></i></button></div></a><a href="#" class="button procesos" data-button-id="604" target="_blank" rel="noopener noreferrer"><span class="button-text">Manual Monday</span> <span class="copy-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span> <div class="button-admin-controls"><button class="admin-btn edit-button-btn" title="Editar Botón"><i class="fas fa-pen"></i></button><button class="admin-btn delete-button-btn" title="Eliminar Botón"><i class="fas fa-trash"></i></button></div></a><a href="#" class="button procesos" data-button-id="605" target="_blank" rel="noopener noreferrer"><span class="button-text">Manual de Herramientas</span> <span class="copy-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span> <div class="button-admin-controls"><button class="admin-btn edit-button-btn" title="Editar Botón"><i class="fas fa-pen"></i></button><button class="admin-btn delete-button-btn" title="Eliminar Botón"><i class="fas fa-trash"></i></button></div></a><div class="add-button-placeholder"><i class="fas fa-plus"></i> <span data-lang-key="add_button_placeholder">Añadir Botón</span></div></div></section></main>
+    
+    <div class="section admin-controls">
+        <button id="add-section-btn" class="button procesos" data-lang-key="add_section"><i class="fas fa-plus"></i> Añadir Nueva Sección</button>
+    </div>
+
+    <footer>
+        <div id="lock-container">
+             <p><a href="#" id="unlock-btn" title="Acceso de Administrador">©</a> 2025 TerranovaOrigen</p>
+        </div>
+        <div id="admin-bar">
+            <div id="admin-controls-container">
+                <span class="version-tag">Ver. <span id="version-display">2.4</span></span>
+                <button id="save-changes-btn" class="admin-btn" title="Guardar Cambios" style="color: var(--color-danger);"><i class="fas fa-save"></i></button>
+                <button id="lock-admin-mode-btn" class="admin-btn" title="Bloquear Modo Edición"><i class="fas fa-lock"></i></button>
+            </div>
+        </div>
+    </footer>
+
+    <div id="notification" class="">¡Enlace copiado!</div>
+
+    <!-- MODALES -->
+    <div id="password-modal-container" class="modal-container">
+        <div class="modal-content password-modal">
+            <button class="modal-close-btn" data-modal-id="password-modal-container">×</button>
+            <h3 data-lang-key="modal_edit_mode_title">Modo Edición</h3>
+            <p style="color:var(--color-gray-dark); margin-bottom: 1.5rem;" data-lang-key="modal_edit_mode_subtitle">Ingresa la contraseña para desbloquear.</p>
+            <form id="password-form">
+                <div class="form-group">
+                    <input type="password" id="password-input" placeholder="••••••••">
+                    <p id="password-error" style="color:var(--color-danger); text-align:center; height: 1rem; margin-top: 0.5rem;"></p>
+                </div>
+                <button type="submit" class="btn-modal btn-primary" data-lang-key="unlock_btn"><i class="fas fa-unlock"></i> Desbloquear</button>
+            </form>
+        </div>
+    </div>
+    
+    <div id="section-editor-modal-container" class="modal-container">
+        <div class="modal-content">
+            <button class="modal-close-btn" data-modal-id="section-editor-modal-container">×</button>
+            <h3 data-lang-key="modal_section_editor_title">Editor de Sección</h3>
+            <form id="section-editor-form">
+                <input type="hidden" id="section-id-for-edit">
+                <div class="form-group">
+                    <label for="section-name-es" data-lang-key="modal_section_name_es">Nombre de la Sección (ES)</label>
+                    <input type="text" id="section-name-es" required="">
+                </div>
+                <div class="form-group">
+                    <label for="section-name-en" data-lang-key="modal_section_name_en">Nombre de la Sección (EN)</label>
+                    <input type="text" id="section-name-en" required="">
+                </div>
+                <button type="submit" class="btn-modal btn-primary" data-lang-key="save_changes_btn">Guardar Cambios</button>
+            </form>
+        </div>
+    </div>
+    
+    <div id="button-editor-modal-container" class="modal-container">
+        <div class="modal-content">
+            <button class="modal-close-btn" data-modal-id="button-editor-modal-container">×</button>
+            <h3 id="button-editor-title">Edit Button</h3>
+            <form id="button-editor-form">
+                <input type="hidden" id="button-id" value="1760051837146">
+                <input type="hidden" id="section-id-for-button" value="3">
+                 <div class="form-group">
+                    <label for="button-name-es" data-lang-key="modal_button_name_es">Nombre del Botón (ES)</label>
+                    <input type="text" id="button-name-es" required="">
+                </div>
+                <div class="form-group">
+                    <label for="button-name-en" data-lang-key="modal_button_name_en">Nombre del Botón (EN)</label>
+                    <input type="text" id="button-name-en" required="">
+                </div>
+                <div class="form-group">
+                    <label for="button-link" data-lang-key="modal_button_link">Enlace (URL)</label>
+                    <input type="text" id="button-link" required="">
+                </div>
+                <div class="form-group">
+                    <label for="button-color" data-lang-key="modal_button_color">Color del Botón</label>
+                    <select id="button-color">
+                        <option value="ecosistemas">Ecosistemas (Naranja)</option>
+                        <option value="solicitudes">Solicitudes (Rojo)</option>
+                        <option value="sistemas">Sistemas (Azul)</option>
+                        <option value="reservas">Reservas (Verde)</option>
+                        <option value="producto">Producto (Morado)</option>
+                        <option value="procesos">Procesos (Gris Oscuro)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="button-hover-text-color" data-lang-key="modal_button_hover_color">Color de Texto (Hover)</label>
+                    <input type="color" id="button-hover-text-color" value="#ECE2D2">
+                </div>
+                <div class="form-group">
+                    <label data-lang-key="modal_button_type">Tipo de Enlace</label>
+                    <div style="display: flex; gap: 1rem;">
+                        <label><input type="radio" name="button-type" value="web" checked=""> Web</label>
+                        <label><input type="radio" name="button-type" value="desktop"> Escritorio (Excel, Word...)</label>
+                    </div>
+                </div>
+                <button type="submit" class="btn-modal btn-primary" data-lang-key="save_button_btn">Guardar Botón</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="code-modal-container" class="modal-container">
+        <div class="modal-content" style="max-width: 800px;">
+            <button class="modal-close-btn" data-modal-id="code-modal-container">×</button>
+            <h3 data-lang-key="modal_save_changes_title">Guardar Cambios</h3>
+            <p style="color:var(--color-gray-dark); margin-bottom: 1rem;" data-lang-key="modal_save_changes_subtitle">Copia este código y reemplaza TODO el contenido de tu archivo HTML para guardar la nueva versión.</p>
+            <div class="form-group">
+                <textarea id="code-output" readonly=""></textarea>
+            </div>
+            <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                 <button id="copy-code-btn" class="btn-modal btn-primary" data-lang-key="copy_code_btn"><i class="fas fa-copy"></i> Copiar Código</button>
+                 <button id="download-html-btn" class="btn-modal btn-success" data-lang-key="download_html_btn"><i class="fas fa-download"></i> Descargar HTML</button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="confirmation-modal-container" class="modal-container">
+        <div class="modal-content">
+             <h3 id="confirmation-title">Eliminar Botón</h3>
+             <p id="confirmation-text" style="color:var(--color-gray-dark); margin-bottom: 1.5rem;">¿Estás seguro de que quieres eliminar este botón?</p>
+             <div style="display: flex; gap: 1rem;">
+                 <button id="cancel-action-btn" class="btn-modal btn-secondary" data-lang-key="cancel_btn">Cancelar</button>
+                 <button id="confirm-action-btn" class="btn-modal btn-danger" data-lang-key="confirm_btn">Confirmar</button>
+             </div>
+        </div>
+    </div>
+
+    <!-- **** ESTRUCTURA DE DATOS **** -->
+    <script id="app-data" type="application/json">
+    {
+    "password": "admin",
+    "version": "2.5",
+    "translations": {
+        "main_title": {
+            "es": "Accesos TerranovaOrigen",
+            "en": "TerranovaOrigen Access"
+        },
+        "add_section": {
+            "es": "<i class=\"fas fa-plus\"></i> Añadir Nueva Sección",
+            "en": "<i class=\"fas fa-plus\"></i> Add New Section"
+        },
+        "modal_edit_mode_title": {
+            "es": "Modo Edición",
+            "en": "Edit Mode"
+        },
+        "modal_edit_mode_subtitle": {
+            "es": "Ingresa la contraseña para desbloquear.",
+            "en": "Enter the password to unlock."
+        },
+        "unlock_btn": {
+            "es": "<i class=\"fas fa-unlock\"></i> Desbloquear",
+            "en": "<i class=\"fas fa-unlock\"></i> Unlock"
+        },
+        "modal_section_editor_title": {
+            "es": "Editor de Sección",
+            "en": "Section Editor"
+        },
+        "modal_section_name_es": {
+            "es": "Nombre de la Sección (ES)",
+            "en": "Section Name (ES)"
+        },
+        "modal_section_name_en": {
+            "es": "Nombre de la Sección (EN)",
+            "en": "Section Name (EN)"
+        },
+        "save_changes_btn": {
+            "es": "Guardar Cambios",
+            "en": "Save Changes"
+        },
+        "modal_button_name_es": {
+            "es": "Nombre del Botón (ES)",
+            "en": "Button Name (ES)"
+        },
+        "modal_button_name_en": {
+            "es": "Nombre del Botón (EN)",
+            "en": "Button Name (EN)"
+        },
+        "modal_button_link": {
+            "es": "Enlace (URL)",
+            "en": "Link (URL)"
+        },
+        "modal_button_color": {
+            "es": "Color del Botón",
+            "en": "Button Color"
+        },
+        "modal_button_hover_color": {
+            "es": "Color de Texto (Hover)",
+            "en": "Text Color (Hover)"
+        },
+        "modal_button_type": {
+            "es": "Tipo de Enlace",
+            "en": "Link Type"
+        },
+        "save_button_btn": {
+            "es": "Guardar Botón",
+            "en": "Save Button"
+        },
+        "modal_save_changes_title": {
+            "es": "Guardar Cambios",
+            "en": "Save Changes"
+        },
+        "modal_save_changes_subtitle": {
+            "es": "Copia este código y reemplaza TODO el contenido de tu archivo HTML para guardar la nueva versión.",
+            "en": "Copy this code and replace the ENTIRE content of your HTML file to save the new version."
+        },
+        "copy_code_btn": {
+            "es": "<i class=\"fas fa-copy\"></i> Copiar Código",
+            "en": "<i class=\"fas fa-copy\"></i> Copy Code"
+        },
+        "download_html_btn": {
+            "es": "<i class=\"fas fa-download\"></i> Descargar HTML",
+            "en": "<i class=\"fas fa-download\"></i> Download HTML"
+        },
+        "cancel_btn": {
+            "es": "Cancelar",
+            "en": "Cancel"
+        },
+        "confirm_btn": {
+            "es": "Confirmar",
+            "en": "Confirm"
+        },
+        "confirm_delete_section_title": {
+            "es": "Eliminar Sección",
+            "en": "Delete Section"
+        },
+        "confirm_delete_section_text": {
+            "es": "¿Estás seguro? Esto eliminará la sección y todos sus botones.",
+            "en": "Are you sure? This will delete the section and all its buttons."
+        },
+        "confirm_delete_button_title": {
+            "es": "Eliminar Botón",
+            "en": "Delete Button"
+        },
+        "confirm_delete_button_text": {
+            "es": "¿Estás seguro de que quieres eliminar este botón?",
+            "en": "Are you sure you want to delete this button?"
+        },
+        "confirm_exit_title": {
+            "es": "Salir sin guardar",
+            "en": "Exit without saving"
+        },
+        "confirm_exit_text": {
+            "es": "¿Estás seguro de que quieres salir? Perderás todos los cambios no guardados.",
+            "en": "Are you sure you want to exit? You will lose all unsaved changes."
+        }
+    },
+    "sections": [
+        {
+            "id": 1,
+            "name": {
+                "es": "Ecosistemas",
+                "en": "Ecosystems"
+            },
+            "order": 1,
+            "buttons": [
+                {
+                    "id": 101,
+                    "name": {
+                        "es": "Mapa de Ecosistemas",
+                        "en": "Ecosystems Map"
+                    },
+                    "link": "https://productoysistemas.github.io/Ecosistema/",
+                    "color": "ecosistemas",
+                    "textColorHover": "#ece2d2",
+                    "type": "web"
+                },
+                {
+                    "id": 102,
+                    "name": {
+                        "es": "Descripciones",
+                        "en": "Descriptions"
+                    },
+                    "link": "https://terranovacocr.sharepoint.com/:w:/s/TerranovaOrigen/EdbpRhM11jtKoH1oA-sF4ZQBHAXMscUQ_97mgYM_YQsNDg?e=dq9tZo",
+                    "color": "ecosistemas",
+                    "textColorHover": "#ece2d2",
+                    "type": "web"
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "name": {
+                "es": "Solicitudes de Apertura",
+                "en": "Opening Requests"
+            },
+            "order": 2,
+            "buttons": [
+                {
+                    "id": 201,
+                    "name": {
+                        "es": "Agencia de Viajes (EN)",
+                        "en": "Travel Agent (EN)"
+                    },
+                    "link": "https://forms.office.com/r/bJK36bqBCz",
+                    "color": "solicitudes",
+                    "textColorHover": "#ece2d2",
+                    "type": "web"
+                },
+                {
+                    "id": 202,
+                    "name": {
+                        "es": "Agencia de Viajes (ES)",
+                        "en": "Travel Agent (ES)"
+                    },
+                    "link": "https://forms.office.com/r/Qc8J5ZzfCL",
+                    "color": "solicitudes",
+                    "textColorHover": "#ece2d2",
+                    "type": "web"
+                },
+                {
+                    "id": 203,
+                    "name": {
+                        "es": "Cliente Directo (EN)",
+                        "en": "Direct Client (EN)"
+                    },
+                    "link": "https://forms.office.com/r/2Kzty3RzLi",
+                    "color": "solicitudes",
+                    "textColorHover": "#ece2d2",
+                    "type": "web"
+                },
+                {
+                    "id": 204,
+                    "name": {
+                        "es": "Cliente Directo (ES)",
+                        "en": "Direct Client (ES)"
+                    },
+                    "link": "https://forms.office.com/r/Lvd8Jiybvx",
+                    "color": "solicitudes",
+                    "textColorHover": "#ece2d2",
+                    "type": "web"
+                },
+                {
+                    "id": 205,
+                    "name": {
+                        "es": "Cliente Corporativo (ES)",
+                        "en": "Corporate Client (ES)"
+                    },
+                    "link": "https://forms.office.com/r/WifsgwMy8E",
+                    "color": "solicitudes",
+                    "textColorHover": "#ece2d2",
+                    "type": "web"
+                },
+                {
+                    "id": 206,
+                    "name": {
+                        "es": "Proveedores",
+                        "en": "Suppliers"
+                    },
+                    "link": "https://forms.office.com/r/rngtyhaSvg",
+                    "color": "solicitudes",
+                    "type": "web",
+                    "textColorHover": "#ECE2D2"
+                },
+                {
+                    "id": 207,
+                    "name": {
+                        "es": "Servicios",
+                        "en": "Services"
+                    },
+                    "link": "https://forms.office.com/pages/responsepage.aspx?id=jN90G6rIeUWdbBRw0MTogTKrGmVsDR1FvMOrqJ5zYbhUQjZUTDgxMDU4MDMyWkpKNU9ZTjhITUgzTC4u",
+                    "color": "solicitudes",
+                    "type": "web",
+                    "textColorHover": "#ECE2D2"
+                }
+            ]
+        },
+        {
+            "id": 3,
+            "name": {
+                "es": "Sistemas",
+                "en": "Systems"
+            },
+            "order": 3,
+            "buttons": [
+                {
+                    "id": 301,
+                    "name": {
+                        "es": "Toursys",
+                        "en": "Toursys"
+                    },
+                    "link": "https://k8s-cloud1.toursys.net/Toursys/login.xhtml?companyName=Terranova",
+                    "color": "sistemas",
+                    "type": "web",
+                    "textColorHover": "#ECE2D2"
+                },
+                {
+                    "id": 302,
+                    "name": {
+                        "es": "Monday",
+                        "en": "Monday"
+                    },
+                    "link": "https://monday.com/lang/es",
+                    "color": "sistemas",
+                    "type": "web",
+                    "textColorHover": "#ECE2D2"
+                },
+                {
+                    "id": 303,
+                    "name": {
+                        "es": "Safari Portal",
+                        "en": "Safari Portal"
+                    },
+                    "link": "https://www.safariportal.app/",
+                    "color": "sistemas",
+                    "type": "web",
+                    "textColorHover": "#ECE2D2"
+                },
+                {
+                    "id": 304,
+                    "name": {
+                        "es": "Herramienta de Comisiones y envíos",
+                        "en": "Commissions & Dispatch Tool"
+                    },
+                    "link": "https://herramintacomisionesenvios.netlify.app/",
+                    "color": "sistemas",
+                    "textColorHover": "#ece2d2",
+                    "type": "web"
+                },
+                {
+                    "id": 305,
+                    "name": {
+                        "es": "Control de proveedores y Servicios",
+                        "en": "Supplier & Services Control"
+                    },
+                    "link": "https://controlproveedoresservicios.netlify.app/",
+                    "color": "sistemas",
+                    "textColorHover": "#ece2d2",
+                    "type": "web"
+                },
+                {
+                    "id": 306,
+                    "name": {
+                        "es": "Formulario Solicitud de Pagos",
+                        "en": "Payment Request Form"
+                    },
+                    "link": "https://apps.powerapps.com/play/e/default-1b74df8c-c8aa-4579-9d6c-1470d0c4e881/a/e0c7f5f7-3abc-4199-823a-240ec6540f03?tenantId=1b74df8c-c8aa-4579-9d6c-1470d0c4e881",
+                    "color": "sistemas",
+                    "type": "web",
+                    "textColorHover": "#ECE2D2"
+                },
+                {
+                    "id": 307,
+                    "name": {
+                        "es": "Links de Pagos",
+                        "en": "Payment Links"
+                    },
+                    "link": "https://miposafiliados.credomatic.com/",
+                    "color": "sistemas",
+                    "textColorHover": "#ece2d2",
+                    "type": "web"
+                },
+                {
+                    "id": 1760051837146,
+                    "name": {
+                        "es": "Herramienta de Cotización Golfito",
+                        "en": "Quoting Tool Golfito"
+                    },
+                    "link": "https://herramientacotizacion.netlify.app/",
+                    "color": "sistemas",
+                    "textColorHover": "#ece2d2",
+                    "type": "web"
+                }
+            ]
+        },
+        {
+            "id": 4,
+            "name": {
+                "es": "Reservas",
+                "en": "Bookings"
+            },
+            "order": 4,
+            "buttons": [
+                {
+                    "id": 401,
+                    "name": {
+                        "es": "Sansa",
+                        "en": "Sansa"
+                    },
+                    "link": "https://www.go7.io/",
+                    "color": "reservas",
+                    "type": "web",
+                    "textColorHover": "#ECE2D2"
+                },
+                {
+                    "id": 402,
+                    "name": {
+                        "es": "National",
+                        "en": "National"
+                    },
+                    "link": "https://natcar.com/?gclid=EAIaIQobChMI3sW7y--x_wIVU-aGCh10AQZ3EAAYASAAEgJ17fD_BwE",
+                    "color": "reservas",
+                    "type": "web",
+                    "textColorHover": "#ECE2D2"
+                },
+                {
+                    "id": 1757610376723,
+                    "name": {
+                        "es": "Orbe",
+                        "en": "Orbe"
+                    },
+                    "link": "https://admin.orbebooking.com/",
+                    "color": "reservas",
+                    "textColorHover": "#ece2d2",
+                    "type": "web"
+                }
+            ]
+        },
+        {
+            "id": 5,
+            "name": {
+                "es": "Producto",
+                "en": "Product"
+            },
+            "order": 5,
+            "buttons": [
+                {
+                    "id": 501,
+                    "name": {
+                        "es": "SharedPoint",
+                        "en": "SharedPoint"
+                    },
+                    "link": "https://terranovacocr.sharepoint.com/sites/TerranovaOrigen/Documentos%20compartidos/Forms/AllItems.aspx",
+                    "color": "producto",
+                    "type": "web",
+                    "textColorHover": "#ECE2D2"
+                },
+                {
+                    "id": 502,
+                    "name": {
+                        "es": "Créditos",
+                        "en": "Credits"
+                    },
+                    "link": "https://terranovacocr.sharepoint.com/:x:/s/TerranovaOrigen/EQc_G9DUv-BOuy7yRrgUfo4Bn9s3_m-AWt5hWrYvRwAreg?e=HtQkdB",
+                    "color": "producto",
+                    "textColorHover": "#ece2d2",
+                    "type": "desktop"
+                },
+                {
+                    "id": 503,
+                    "name": {
+                        "es": "Green Season Specials",
+                        "en": "Green Season Specials"
+                    },
+                    "link": "https://terranovacocr.sharepoint.com/:f:/s/TerranovaOrigen/ErH6hj1D83NJuBM4zBrXObsBZRrvP_hChQrfNna0sz9uLQ?e=KpkzqA",
+                    "color": "producto",
+                    "textColorHover": "#ece2d2",
+                    "type": "web"
+                },
+                {
+                    "id": 504,
+                    "name": {
+                        "es": "Amenidades Virtuoso",
+                        "en": "Virtuoso Amenities"
+                    },
+                    "link": "https://terranovacocr.sharepoint.com/:f:/s/TerranovaOrigen/EvhifJDTl-FDvV7ZmbPN80EBIzOMNMrjomds7j9YdQq8lw?e=QGw7ve",
+                    "color": "producto",
+                    "textColorHover": "#ece2d2",
+                    "type": "desktop"
+                },
+                {
+                    "id": 506,
+                    "name": {
+                        "es": "Fórmulas de Cálculo",
+                        "en": "Calculation Formulas"
+                    },
+                    "link": "https://terranovacocr.sharepoint.com/:w:/s/TerranovaOrigen/EZbRLyZ_qZFNnos3rTCE1eAB1LNwVxkQv-IvSfjPmn6kFQ?e=ehaaiv",
+                    "color": "producto",
+                    "textColorHover": "#ece2d2",
+                    "type": "desktop"
+                }
+            ]
+        },
+        {
+            "id": 6,
+            "name": {
+                "es": "Procesos",
+                "en": "Processes"
+            },
+            "order": 6,
+            "buttons": [
+                {
+                    "id": 601,
+                    "name": {
+                        "es": "Client Journey",
+                        "en": "Client Journey"
+                    },
+                    "link": "https://productoysistemas.github.io/ClientJourney/",
+                    "color": "procesos",
+                    "textColorHover": "#ece2d2",
+                    "type": "web"
+                },
+                {
+                    "id": 602,
+                    "name": {
+                        "es": "Manual Safari",
+                        "en": "Safari Manual"
+                    },
+                    "link": "https://terranovacocr.sharepoint.com/:b:/s/TerranovaOrigen/EdQktKfH1o1LqCLIF2xe4PUBIbcsZX3PdS2Bs1QaRQys0w?e=IcfBoh",
+                    "color": "procesos",
+                    "textColorHover": "#ece2d2",
+                    "type": "web"
+                },
+                {
+                    "id": 603,
+                    "name": {
+                        "es": "Manual Toursys",
+                        "en": "Toursys Manual"
+                    },
+                    "link": "#",
+                    "color": "procesos",
+                    "type": "web",
+                    "textColorHover": "#ECE2D2"
+                },
+                {
+                    "id": 604,
+                    "name": {
+                        "es": "Manual Monday",
+                        "en": "Monday Manual"
+                    },
+                    "link": "#",
+                    "color": "procesos",
+                    "type": "web",
+                    "textColorHover": "#ECE2D2"
+                },
+                {
+                    "id": 605,
+                    "name": {
+                        "es": "Manual de Herramientas",
+                        "en": "Tools Manual"
+                    },
+                    "link": "#",
+                    "color": "procesos",
+                    "type": "web",
+                    "textColorHover": "#ECE2D2"
+                }
+            ]
+        }
+    ]
+}
+    </script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- STATE MANAGEMENT ---
+        const dataElement = document.getElementById('app-data');
+        let appData = JSON.parse(dataElement.textContent);
+        let isAdminMode = false;
+        let hasUnsavedChanges = false;
+        let confirmCallback = null;
+        let currentEditingButton = null;
+        let currentLang = 'es';
+
+        // --- DOM ELEMENTS ---
+        const appBody = document.getElementById('app-body');
+        const sectionsContainer = document.getElementById('sections-container');
+        const unlockBtn = document.getElementById('unlock-btn');
+        const addSectionBtn = document.getElementById('add-section-btn');
+        const saveChangesBtn = document.getElementById('save-changes-btn');
+        const lockAdminModeBtn = document.getElementById('lock-admin-mode-btn');
+        const versionDisplay = document.getElementById('version-display');
+        const langSwitcherBtn = document.getElementById('lang-switcher-btn');
+        
+        const passwordModal = {
+            container: document.getElementById('password-modal-container'),
+            form: document.getElementById('password-form'),
+            input: document.getElementById('password-input'),
+            error: document.getElementById('password-error'),
+            content: document.querySelector('.password-modal')
+        };
+
+        const sectionEditorModal = {
+            container: document.getElementById('section-editor-modal-container'),
+            form: document.getElementById('section-editor-form'),
+            idInput: document.getElementById('section-id-for-edit'),
+            nameEsInput: document.getElementById('section-name-es'),
+            nameEnInput: document.getElementById('section-name-en')
+        };
+        
+        const buttonEditorModal = {
+            container: document.getElementById('button-editor-modal-container'),
+            title: document.getElementById('button-editor-title'),
+            form: document.getElementById('button-editor-form'),
+            buttonIdInput: document.getElementById('button-id'),
+            sectionIdInput: document.getElementById('section-id-for-button'),
+            nameEsInput: document.getElementById('button-name-es'),
+            nameEnInput: document.getElementById('button-name-en'),
+            linkInput: document.getElementById('button-link'),
+            colorSelect: document.getElementById('button-color'),
+            textColorHoverInput: document.getElementById('button-hover-text-color')
+        };
+
+        const codeModal = {
+            container: document.getElementById('code-modal-container'),
+            output: document.getElementById('code-output'),
+            copyBtn: document.getElementById('copy-code-btn'),
+            downloadBtn: document.getElementById('download-html-btn')
+        };
+        
+        const confirmationModal = {
+            container: document.getElementById('confirmation-modal-container'),
+            title: document.getElementById('confirmation-title'),
+            text: document.getElementById('confirmation-text'),
+            confirmBtn: document.getElementById('confirm-action-btn'),
+            cancelBtn: document.getElementById('cancel-action-btn')
+        };
+
+        // --- TRANSLATION LOGIC ---
+        function translateApp() {
+            document.querySelectorAll('[data-lang-key]').forEach(el => {
+                const key = el.dataset.langKey;
+                if(appData.translations[key] && appData.translations[key][currentLang]) {
+                    el.innerHTML = appData.translations[key][currentLang];
+                }
+            });
+
+            document.querySelector('h1[data-lang-key="main_title"]').textContent = appData.translations.main_title[currentLang];
+            appData.sections.forEach(section => {
+                const sectionEl = sectionsContainer.querySelector(`[data-section-id="${section.id}"] h2`);
+                if (sectionEl) sectionEl.textContent = section.name[currentLang];
+                section.buttons.forEach(button => {
+                    const buttonEl = sectionsContainer.querySelector(`[data-button-id="${button.id}"] .button-text`);
+                    if (buttonEl) buttonEl.textContent = button.name[currentLang];
+                });
+            });
+        }
+
+        // --- RENDER FUNCTIONS ---
+        function generateDynamicHoverStyles() {
+            let styles = '';
+            appData.sections.forEach(section => {
+                section.buttons.forEach(button => {
+                    if (button.textColorHover) {
+                        styles += `
+                            .button[data-button-id="${button.id}"]:hover {
+                                color: ${button.textColorHover};
+                            }
+                            .button[data-button-id="${button.id}"]:hover .copy-icon svg {
+                                stroke: ${button.textColorHover};
+                            }
+                        `;
+                    }
+                });
+            });
+            document.getElementById('dynamic-hover-styles').innerHTML = styles;
+        }
+
+        function renderApp() {
+            sectionsContainer.innerHTML = '';
+            appData.sections.sort((a, b) => a.order - b.order).forEach(section => {
+                const sectionEl = document.createElement('section');
+                sectionEl.className = 'section';
+                sectionEl.dataset.sectionId = section.id;
+
+                const titleContainer = document.createElement('div');
+                titleContainer.style.position = 'relative';
+                titleContainer.style.display = 'inline-block';
+
+                const title = document.createElement('h2');
+                title.textContent = section.name[currentLang];
+                
+                const sectionAdminControls = `
+                    <div class="section-admin-controls">
+                        <button class="admin-btn edit-section-btn" title="Editar Sección"><i class="fas fa-pen"></i></button>
+                        <button class="admin-btn delete-section-btn" title="Eliminar Sección"><i class="fas fa-trash"></i></button>
+                    </div>`;
+
+                titleContainer.appendChild(title);
+                if (isAdminMode) {
+                    titleContainer.innerHTML += sectionAdminControls;
+                }
+                sectionEl.appendChild(titleContainer);
+
+                const buttonContainer = document.createElement('div');
+                buttonContainer.className = 'button-container';
+
+                section.buttons.forEach(button => {
+                    const buttonEl = document.createElement('a');
+                    buttonEl.href = button.link;
+                    buttonEl.className = `button ${button.color}`;
+                    buttonEl.dataset.buttonId = button.id;
+                    if(button.type !== 'desktop') {
+                       buttonEl.target = '_blank';
+                       buttonEl.rel = 'noopener noreferrer';
+                    }
+
+                    const copyIconHTML = `<span class="copy-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></span>`;
+                    const buttonAdminControls = `<div class="button-admin-controls"><button class="admin-btn edit-button-btn" title="Editar Botón"><i class="fas fa-pen"></i></button><button class="admin-btn delete-button-btn" title="Eliminar Botón"><i class="fas fa-trash"></i></button></div>`;
+                    
+                    buttonEl.innerHTML = `<span class="button-text">${button.name[currentLang]}</span> ${copyIconHTML} ${isAdminMode ? buttonAdminControls : ''}`;
+                    buttonContainer.appendChild(buttonEl);
+                });
+
+                if (isAdminMode) {
+                    const addBtnPlaceholder = document.createElement('div');
+                    addBtnPlaceholder.className = 'add-button-placeholder';
+                    addBtnPlaceholder.innerHTML = `<i class="fas fa-plus"></i> <span data-lang-key="add_button_placeholder">Añadir Botón</span>`; 
+                    buttonContainer.appendChild(addBtnPlaceholder);
+                }
+
+                sectionEl.appendChild(buttonContainer);
+                sectionsContainer.appendChild(sectionEl);
+            });
+            versionDisplay.textContent = appData.version;
+            
+            if (langSwitcherBtn) {
+                langSwitcherBtn.textContent = (currentLang === 'es') ? 'EN' : 'ES';
+            }
+
+            generateDynamicHoverStyles();
+            translateApp(); 
+            attachDynamicEventListeners();
+        }
+        
+        // --- CORE LOGIC & STATE CHANGES ---
+        function enterAdminMode() {
+            isAdminMode = true;
+            appBody.classList.add('admin-mode');
+            renderApp();
+        }
+
+        function exitAdminMode() {
+            if(hasUnsavedChanges) {
+                showConfirmation(
+                    appData.translations.confirm_exit_title[currentLang], 
+                    appData.translations.confirm_exit_text[currentLang], () => {
+                    isAdminMode = false;
+                    hasUnsavedChanges = false;
+                    appBody.classList.remove('admin-mode');
+                    appData = JSON.parse(dataElement.textContent);
+                    renderApp();
+                });
+            } else {
+                 isAdminMode = false;
+                 appBody.classList.remove('admin-mode');
+                 renderApp();
+            }
+        }
+        
+        function markUnsaved() {
+            hasUnsavedChanges = true;
+            saveChangesBtn.style.color = 'var(--color-danger)';
+        }
+
+        function getFullSourceCode() {
+            const clone = document.documentElement.cloneNode(true);
+            const bodyClone = clone.querySelector('#app-body');
+            bodyClone.classList.remove('admin-mode');
+            clone.querySelectorAll('.modal-container.visible').forEach(el => el.classList.remove('visible'));
+            const dataElementClone = clone.querySelector('#app-data');
+            dataElementClone.textContent = `\n    ${JSON.stringify(appData, null, 4)}\n    `;
+            const versionComment = clone.querySelector('title').previousSibling;
+            if(versionComment && versionComment.nodeType === Node.COMMENT_NODE) {
+                versionComment.textContent = ` Versión: ${appData.version} `;
+            }
+            return `<!DOCTYPE html>\n${clone.outerHTML}`;
+        }
+        
+        function handleSaveChanges() {
+            if (!hasUnsavedChanges) {
+                showNotification("No hay cambios que guardar.");
+                return;
+            }
+            let currentVersion = parseFloat(appData.version);
+            let newVersion = (currentVersion + 0.1).toFixed(1);
+            appData.version = newVersion.toString();
+            codeModal.output.value = getFullSourceCode();
+            openModal(codeModal.container);
+        }
+
+        function handleDownloadHtml() {
+            const codeToDownload = getFullSourceCode();
+            const blob = new Blob([codeToDownload], { type: 'text/html' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `portal-accesos-v${appData.version}.html`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(a.href);
+        }
+
+        // --- MODAL & NOTIFICATION HELPERS ---
+        function openModal(modalContainer) { modalContainer.classList.add('visible'); }
+        function closeModal(modalContainer) { modalContainer.classList.remove('visible'); }
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.classList.add('show');
+            setTimeout(() => { notification.classList.remove('show'); }, 2500);
+        }
+        function showConfirmation(title, text, onConfirm) {
+            confirmationModal.title.textContent = title;
+            confirmationModal.text.textContent = text;
+            confirmCallback = onConfirm;
+            openModal(confirmationModal.container);
+        }
+
+        // --- EVENT LISTENERS ---
+        function attachInitialEventListeners() {
+            unlockBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                openModal(passwordModal.container)
+            });
+            lockAdminModeBtn.addEventListener('click', exitAdminMode);
+            saveChangesBtn.addEventListener('click', handleSaveChanges);
+            addSectionBtn.addEventListener('click', () => openSectionEditor(null));
+            codeModal.downloadBtn.addEventListener('click', handleDownloadHtml);
+            
+            langSwitcherBtn.addEventListener('click', () => {
+                currentLang = (currentLang === 'es') ? 'en' : 'es';
+                document.documentElement.lang = currentLang;
+                renderApp();
+            });
+            
+            passwordModal.form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                passwordModal.error.textContent = '';
+                if (passwordModal.input.value === appData.password) {
+                    closeModal(passwordModal.container);
+                    passwordModal.input.value = '';
+                    enterAdminMode();
+                } else {
+                    passwordModal.error.textContent = 'Contraseña incorrecta.';
+                    passwordModal.content.classList.add('shake');
+                    setTimeout(() => passwordModal.content.classList.remove('shake'), 500);
+                }
+            });
+
+            sectionEditorModal.form.addEventListener('submit', handleSaveSection);
+            buttonEditorModal.form.addEventListener('submit', handleSaveButton);
+
+            confirmationModal.confirmBtn.addEventListener('click', () => {
+                if (confirmCallback) confirmCallback();
+                closeModal(confirmationModal.container);
+            });
+            confirmationModal.cancelBtn.addEventListener('click', () => closeModal(confirmationModal.container));
+            
+            codeModal.copyBtn.addEventListener('click', () => {
+                codeModal.output.select();
+                document.execCommand('copy');
+                showNotification('¡Código copiado!');
+            });
+            
+            document.querySelectorAll('.modal-close-btn').forEach(btn => {
+                btn.addEventListener('click', () => closeModal(document.getElementById(btn.dataset.modalId)));
+            });
+        }
+        
+        function attachDynamicEventListeners() {
+            sectionsContainer.addEventListener('click', (e) => {
+                const target = e.target;
+                
+                const editButtonBtn = target.closest('.edit-button-btn');
+                const deleteButtonBtn = target.closest('.delete-button-btn');
+
+                if (isAdminMode && (editButtonBtn || deleteButtonBtn)) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                
+                    if (editButtonBtn) {
+                        const buttonEl = editButtonBtn.closest('.button');
+                        const sectionId = buttonEl.closest('.section').dataset.sectionId;
+                        const buttonId = buttonEl.dataset.buttonId;
+                        openButtonEditor(buttonId, sectionId);
+                        return;
+                    }
+                    
+                    if (deleteButtonBtn) {
+                        const buttonEl = deleteButtonBtn.closest('.button');
+                        const sectionId = buttonEl.closest('.section').dataset.sectionId;
+                        const buttonId = buttonEl.dataset.buttonId;
+                        showConfirmation(appData.translations.confirm_delete_button_title[currentLang], appData.translations.confirm_delete_button_text[currentLang], () => {
+                           handleDeleteButton(sectionId, buttonId);
+                        });
+                        return;
+                    }
+                }
+
+                const copyIcon = target.closest('.copy-icon');
+                if (copyIcon) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const link = copyIcon.closest('a').href;
+                    navigator.clipboard.writeText(link).then(() => {
+                        showNotification('¡Enlace copiado!');
+                    });
+                    return;
+                }
+                
+                const buttonLink = target.closest('.button');
+                if (buttonLink && buttonLink.href.endsWith('#')) {
+                    e.preventDefault();
+                    showNotification('Este enlace aún no está configurado.');
+                }
+                
+                if (!isAdminMode) return;
+                
+                const addBtnPlaceholder = target.closest('.add-button-placeholder');
+                if (addBtnPlaceholder) {
+                    const sectionId = addBtnPlaceholder.closest('.section').dataset.sectionId;
+                    openButtonEditor(null, sectionId);
+                    return;
+                }
+                
+                const editSectionBtn = target.closest('.edit-section-btn');
+                if (editSectionBtn) {
+                    const sectionId = editSectionBtn.closest('.section').dataset.sectionId;
+                    openSectionEditor(sectionId);
+                    return;
+                }
+                
+                const deleteSectionBtn = target.closest('.delete-section-btn');
+                if (deleteSectionBtn) {
+                    const sectionId = deleteSectionBtn.closest('.section').dataset.sectionId;
+                    showConfirmation(appData.translations.confirm_delete_section_title[currentLang], appData.translations.confirm_delete_section_text[currentLang], () => {
+                       handleDeleteSection(sectionId);
+                    });
+                    return;
+                }
+            });
+        }
+        
+        // --- HANDLER FUNCTIONS (CRUD) ---
+        function openSectionEditor(sectionId) {
+            sectionEditorModal.form.reset();
+            if (sectionId) {
+                const section = appData.sections.find(s => s.id == sectionId);
+                sectionEditorModal.idInput.value = section.id;
+                sectionEditorModal.nameEsInput.value = section.name.es;
+                sectionEditorModal.nameEnInput.value = section.name.en;
+            } else {
+                sectionEditorModal.idInput.value = '';
+            }
+            openModal(sectionEditorModal.container);
+        }
+
+        function handleSaveSection(e) {
+            e.preventDefault();
+            const sectionId = sectionEditorModal.idInput.value;
+            const nameEs = sectionEditorModal.nameEsInput.value;
+            const nameEn = sectionEditorModal.nameEnInput.value;
+
+            if (sectionId) { // Editing
+                const section = appData.sections.find(s => s.id == sectionId);
+                section.name.es = nameEs;
+                section.name.en = nameEn;
+            } else { // Adding
+                const maxOrder = Math.max(0, ...appData.sections.map(s => s.order || 0));
+                const newSection = {
+                    id: Date.now(),
+                    name: { es: nameEs, en: nameEn },
+                    order: maxOrder + 1,
+                    buttons: []
+                };
+                appData.sections.push(newSection);
+            }
+            markUnsaved();
+            renderApp();
+            closeModal(sectionEditorModal.container);
+        }
+
+        function handleDeleteSection(sectionId) {
+            appData.sections = appData.sections.filter(s => s.id != sectionId);
+            markUnsaved();
+            renderApp();
+        }
+
+        function openButtonEditor(buttonId, sectionId) {
+            buttonEditorModal.form.reset();
+            buttonEditorModal.sectionIdInput.value = sectionId;
+            const titleKey = buttonId ? "modal_button_editor_title_edit" : "modal_button_editor_title_add";
+            buttonEditorModal.title.innerHTML = appData.translations[titleKey] ? appData.translations[titleKey][currentLang] : (buttonId ? 'Edit Button' : 'Add Button');
+
+            if (buttonId) {
+                currentEditingButton = true;
+                const section = appData.sections.find(s => s.id == sectionId);
+                const button = section.buttons.find(b => b.id == buttonId);
+                buttonEditorModal.buttonIdInput.value = button.id;
+                buttonEditorModal.nameEsInput.value = button.name.es;
+                buttonEditorModal.nameEnInput.value = button.name.en;
+                buttonEditorModal.linkInput.value = button.link;
+                buttonEditorModal.colorSelect.value = button.color;
+                buttonEditorModal.textColorHoverInput.value = button.textColorHover || '#ECE2D2';
+                buttonEditorModal.form.elements['button-type'].value = button.type || 'web';
+            } else {
+                currentEditingButton = false;
+                buttonEditorModal.buttonIdInput.value = "";
+                buttonEditorModal.textColorHoverInput.value = '#ECE2D2';
+            }
+            openModal(buttonEditorModal.container);
+        }
+
+        function handleSaveButton(e) {
+            e.preventDefault();
+            const sectionId = buttonEditorModal.sectionIdInput.value;
+            const buttonId = buttonEditorModal.buttonIdInput.value;
+            const section = appData.sections.find(s => s.id == sectionId);
+
+            const buttonData = {
+                id: buttonId ? parseInt(buttonId) : Date.now(),
+                name: { 
+                    es: buttonEditorModal.nameEsInput.value,
+                    en: buttonEditorModal.nameEnInput.value 
+                },
+                link: buttonEditorModal.linkInput.value,
+                color: buttonEditorModal.colorSelect.value,
+                textColorHover: buttonEditorModal.textColorHoverInput.value,
+                type: buttonEditorModal.form.elements['button-type'].value
+            };
+
+            if (currentEditingButton) { // Update
+                const buttonIndex = section.buttons.findIndex(b => b.id == buttonId);
+                section.buttons[buttonIndex] = buttonData;
+            } else { // Create
+                section.buttons.push(buttonData);
+            }
+            
+            markUnsaved();
+            renderApp();
+            closeModal(buttonEditorModal.container);
+        }
+        
+        function handleDeleteButton(sectionId, buttonId) {
+            const section = appData.sections.find(s => s.id == sectionId);
+            section.buttons = section.buttons.filter(b => b.id != buttonId);
+            markUnsaved();
+            renderApp();
+        }
+        
+        // --- INITIALIZATION ---
+        renderApp();
+        attachInitialEventListeners();
+    });
+    </script>
+
+
+
+
